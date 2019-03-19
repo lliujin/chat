@@ -19,6 +19,8 @@ public class ChatServer {
             ss = new ServerSocket(9999);
         } catch (BindException e) {
             System.out.println("端口使用中……");
+            System.out.println("请关掉相关程序并重新启动服务器");
+            System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         }

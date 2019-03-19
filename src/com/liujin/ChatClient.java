@@ -29,6 +29,7 @@ public class ChatClient extends Frame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                disconnect();
                 System.exit(0);
             }
         });
@@ -42,6 +43,15 @@ public class ChatClient extends Frame {
             s = new Socket("127.0.0.1", 9999);
 System.out.print("a client connected!");
             dos = new DataOutputStream(s.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void disconnect() {
+        try {
+            dos.close();
+            s.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
