@@ -1,16 +1,21 @@
 package com.liujin;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatServer {
 
     boolean started = false;
     ServerSocket ss = null;
+
+    List<Client> clients = new ArrayList<>();
 
     public static void main(String[] args) {
         new ChatServer().start();
@@ -52,6 +57,7 @@ public class ChatServer {
 
         private Socket s;
         private DataInputStream dis = null;
+        private DataOutputStream dos = null;
         private boolean bConnected = false;
 
         public Client(Socket s) {
@@ -64,12 +70,24 @@ public class ChatServer {
             }
         }
 
+        public void send(String str) {
+            try {
+                dos.writeUTF(str);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         @Override
         public void run() {
             try {
                 while (bConnected) {
                     String str = dis.readUTF();
-                    System.out.println(str);
+System.out.println(str);
+                    for(int i=0; i<clients.size(); i++) {
+                        Client c = clients.get(i);
+                        c.send(str);
+                    }
                 }
             } catch(EOFException e){
                     System.out.println("Client closed!");
@@ -78,7 +96,8 @@ public class ChatServer {
             } finally{
                 try {
                     if (dis != null) dis.close();
-
+                    if (dos != null) dos.close();
+                    if (s != null) s.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
