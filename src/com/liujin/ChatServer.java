@@ -1,19 +1,28 @@
 package com.liujin;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ChatServer {
     public static void main(String[] args) {
 
+        ServerSocket ss = null;
         Socket s = null;
         DataInputStream dis = null;
-
         boolean started = false;
+
         try {
-            ServerSocket ss = new ServerSocket(9999);
+            ss = new ServerSocket(9999);
+        } catch (BindException e) {
+            System.out.println("端口使用中……");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
             started = true;
             while(started) {
                 boolean bConnected = false;
@@ -26,8 +35,10 @@ System.out.println("connected!");
                     System.out.println(str);
                 }
             }
-        } catch (IOException e) {
+        } catch(EOFException e) {
             System.out.println("Client closed!");
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             try {
                 if(dis != null) dis.close();

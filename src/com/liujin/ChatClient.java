@@ -12,9 +12,7 @@ import java.net.Socket;
 public class ChatClient extends Frame {
 
     Socket s = null;
-
     DataOutputStream dos = null;
-
     TextField textField = new TextField();
     TextArea textArea = new TextArea();
 
