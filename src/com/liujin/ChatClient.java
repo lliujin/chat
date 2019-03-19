@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.Socket;
 
 public class ChatClient extends Frame {
 
@@ -29,6 +31,16 @@ public class ChatClient extends Frame {
         });
         textField.addActionListener(new TextFieldListener());
         setVisible(true);
+        connect();
+    }
+
+    public void connect() {
+        try {
+            Socket s = new Socket("127.0.0.1", 9999);
+System.out.print("a client connected!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private class TextFieldListener implements ActionListener {
