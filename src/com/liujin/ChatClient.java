@@ -94,7 +94,7 @@ System.out.println(str);
                     textArea.setText(textArea.getText() + str + '\n');
                 }
             } catch (SocketException e) {
-                System.out.println("exit,bye!");
+                System.out.println("quit,bye!");
             } catch (IOException e) {
                 e.printStackTrace();
             }

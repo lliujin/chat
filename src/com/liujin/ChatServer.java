@@ -27,8 +27,8 @@ public class ChatServer {
             ss = new ServerSocket(9999);
             started = true;
         } catch (BindException e) {
-            System.out.println("端口使用中……");
-            System.out.println("请关掉相关程序并重新启动服务器");
+            System.out.println("the port is occupied");
+            System.out.println("please close and restart");
             System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class ChatServer {
                 dos.writeUTF(str);
             } catch (IOException e) {
                 clients.remove(this);
-                System.out.println("对方退出了，我从list中去掉了");
+                System.out.println("a client quit!");
             }
 
         }
