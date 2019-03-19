@@ -1,6 +1,8 @@
 package com.liujin;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ChatClient extends Frame {
 
@@ -16,6 +18,13 @@ public class ChatClient extends Frame {
         add(textField, BorderLayout.SOUTH);
         add(textArea, BorderLayout.NORTH);
         pack();
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
         setVisible(true);
     }
 }
