@@ -13,6 +13,8 @@ public class ChatClient extends Frame {
 
     Socket s = null;
 
+    DataOutputStream dos = null;
+
     TextField textField = new TextField();
     TextArea textArea = new TextArea();
 
@@ -41,6 +43,7 @@ public class ChatClient extends Frame {
         try {
             s = new Socket("127.0.0.1", 9999);
 System.out.print("a client connected!");
+            dos = new DataOutputStream(s.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,10 +58,8 @@ System.out.print("a client connected!");
             textField.setText("");
 
             try {
-                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
                 dos.writeUTF(str);
                 dos.flush();
-                dos.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
