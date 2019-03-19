@@ -39,8 +39,7 @@ public class ChatServer {
                 Client c = new Client(s);
 
                 new Thread(c).start();
-                System.out.println("connected!");
-
+                clients.add(c);
             }
         } catch(IOException e) {
             e.printStackTrace();
@@ -64,6 +63,7 @@ public class ChatServer {
             this.s = s;
             try {
                 dis = new DataInputStream(s.getInputStream());
+                dos = new DataOutputStream(s.getOutputStream());
                 bConnected = true;
             } catch (IOException e) {
                 e.printStackTrace();

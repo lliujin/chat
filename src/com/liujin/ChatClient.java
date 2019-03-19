@@ -5,16 +5,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ChatClient extends Frame {
 
     Socket s = null;
     DataOutputStream dos = null;
+    DataInputStream dis = null;
+    private  boolean bConnected = false;
+
     TextField textField = new TextField();
     TextArea textArea = new TextArea();
+    Thread tRecv = new Thread(new RecvThread());
 
     public static void main(String[] args) {
         new ChatClient().launchFrame();
@@ -36,13 +42,17 @@ public class ChatClient extends Frame {
         textField.addActionListener(new TextFieldListener());
         setVisible(true);
         connect();
+
+        tRecv.start();
     }
 
     public void connect() {
         try {
             s = new Socket("127.0.0.1", 9999);
-System.out.print("a client connected!");
             dos = new DataOutputStream(s.getOutputStream());
+            dis = new DataInputStream(s.getInputStream());
+System.out.print("a client connected!");
+            bConnected = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,6 +61,7 @@ System.out.print("a client connected!");
     public void disconnect() {
         try {
             dos.close();
+            dis.close();
             s.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,15 +72,31 @@ System.out.print("a client connected!");
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String str = textField.getText();
-            textArea.setText(str);
+            String str = textField.getText().trim();
             textField.setText("");
-
             try {
                 dos.writeUTF(str);
                 dos.flush();
             } catch (IOException e1) {
                 e1.printStackTrace();
+            }
+        }
+    }
+
+    private class RecvThread implements Runnable {
+
+        @Override
+        public void run() {
+            try {
+                while (bConnected) {
+                    String str = dis.readUTF();
+System.out.println(str);
+                    textArea.setText(textArea.getText() + str + '\n');
+                }
+            } catch (SocketException e) {
+                System.out.println("exit,bye!");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
